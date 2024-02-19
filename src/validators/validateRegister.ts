@@ -14,8 +14,4 @@ export const validateRegister = (): ValidationChain[] => [
     min: INPUT_TYPE_MIN_LENGTH,
     max: INPUT_TYPE_MAX_LENGTH,
   }),
-  check("username", getFieldValidationMessage("Username", "input")).isLength({
-    min: INPUT_TYPE_MIN_LENGTH,
-    max: INPUT_TYPE_MAX_LENGTH,
-  }),
 ];

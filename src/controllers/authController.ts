@@ -12,6 +12,7 @@ const { JWT_SECRET } = process.env;
 
 class AuthC {
   async register(req: Request, res: Response) {
+    console.log("%c req ===>", "color: #90ee90", req);
     try {
       const errors = validationResult(req);
 
