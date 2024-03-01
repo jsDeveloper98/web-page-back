@@ -3,7 +3,7 @@ import {
   INPUT_TYPE_MIN_LENGTH,
   TEXTAREA_TYPE_MAX_LENGTH,
   TEXTAREA_TYPE_MIN_LENGTH,
-} from "../constants/validations";
+} from "@/constants/validations";
 
 export const getFieldValidationMessage = (
   fieldName: string,

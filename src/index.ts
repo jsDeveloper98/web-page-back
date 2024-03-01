@@ -2,8 +2,8 @@ import cors from "cors";
 import express from "express";
 import { config } from "dotenv";
 
-import { authRoute } from "./routes";
-import { connectDB } from "./config";
+import { connectDB } from "@/config";
+import { authRoute, postRoute } from "@/routes";
 
 config();
 
@@ -11,10 +11,9 @@ const app = express();
 
 app.use(cors());
 app.use(express.json());
-// app.use("/uploads", express.static("uploads"));
+app.use("/uploads", express.static("uploads"));
 
-app.use(authRoute);
-// app.use(userRoute);
-// app.use(announcementsRoute);
+app.use("/api", authRoute);
+app.use("/api", postRoute);
 
 connectDB(app);

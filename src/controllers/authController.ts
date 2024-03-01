@@ -4,7 +4,7 @@ import { compare, hash } from "bcrypt";
 import { Request, Response } from "express";
 import { validationResult } from "express-validator";
 
-import { User, IUser } from "../models";
+import { User, IUser } from "@/models";
 
 config();
 
@@ -12,7 +12,6 @@ const { JWT_SECRET } = process.env;
 
 class AuthC {
   async register(req: Request, res: Response) {
-    console.log("%c req ===>", "color: #90ee90", req);
     try {
       const errors = validationResult(req);
 
