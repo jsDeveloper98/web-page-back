@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import { validationResult } from "express-validator";
 
-import { Post } from "@/models";
+import { Post } from "../models";
 
 class PostC {
   async create(req: Request, res: Response) {

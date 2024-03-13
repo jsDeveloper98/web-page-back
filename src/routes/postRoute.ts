@@ -1,9 +1,9 @@
 import { Router } from "express";
 
-import { upload } from "@/config";
-import { checkAuth } from "@/middlewares";
-import { validatePost } from "@/validators";
-import { PostController } from "@/controllers";
+import { upload } from "../config";
+import { checkAuth } from "../middlewares";
+import { validatePost } from "../validators";
+import { PostController } from "../controllers";
 
 const router = Router();
 

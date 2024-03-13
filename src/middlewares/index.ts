@@ -6,6 +6,7 @@ config();
 
 const { JWT_SECRET } = process.env;
 
+// TODO: change the logic here to handle cookies
 export const checkAuth = (
   req: Request & { user?: JwtPayload },
   res: Response,

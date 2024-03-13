@@ -4,7 +4,7 @@ import { compare, hash } from "bcrypt";
 import { Request, Response } from "express";
 import { validationResult } from "express-validator";
 
-import { User, IUser } from "@/models";
+import { User, IUser } from "../models";
 
 config();
 
@@ -40,10 +40,10 @@ class AuthC {
       const user = await userModel.save();
 
       const token = sign({ userId: user._id }, JWT_SECRET as string, {
-        expiresIn: "7d",
+        expiresIn: "1h",
       });
 
-      res.status(201).json({
+      return res.status(201).json({
         data: { token, userId: user.id },
         message: "Registration is completed",
       });
@@ -82,12 +82,55 @@ class AuthC {
       }
 
       const token = sign({ userId: user.id }, JWT_SECRET as string, {
-        expiresIn: "7d",
+        expiresIn: "1h",
       });
 
-      res.json({
+      const hour = 3600000;
+      res.cookie("token", token, { maxAge: hour, httpOnly: true });
+      res.cookie("userId", user.id, { maxAge: hour, httpOnly: true });
+
+      return res.json({
         message: "Successfully logged in",
         data: { token, userId: user.id },
+      });
+    } catch (err) {
+      if (err instanceof Error) {
+        res.status(400).json({ message: err.message, data: null });
+      }
+    }
+  }
+
+  checkAuth(req: Request, res: Response) {
+    try {
+      const token = req.cookies.token;
+      const userId = req.cookies.userId;
+
+      if (!!token) {
+        return res.json({
+          message: "Authorized",
+          data: { token, userId },
+        });
+      }
+
+      return res.json({
+        message: "Unauthorized",
+        data: null,
+      });
+    } catch (err) {
+      if (err instanceof Error) {
+        res.status(400).json({ message: err.message, data: null });
+      }
+    }
+  }
+
+  logout(req: Request, res: Response) {
+    try {
+      res.clearCookie("token");
+      res.clearCookie("userId");
+
+      return res.json({
+        message: "Successfully logged out",
+        data: null,
       });
     } catch (err) {
       if (err instanceof Error) {
