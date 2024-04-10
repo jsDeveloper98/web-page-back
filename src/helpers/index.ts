@@ -1,3 +1,4 @@
+import multer, { Multer } from "multer";
 import {
   INPUT_TYPE_MAX_LENGTH,
   INPUT_TYPE_MIN_LENGTH,
@@ -17,4 +18,17 @@ export const getFieldValidationMessage = (
     textarea: () =>
       `${fieldName} length should be between ${TEXTAREA_TYPE_MIN_LENGTH} and ${TEXTAREA_TYPE_MAX_LENGTH}`,
   }[type]();
+};
+
+export const getUpload = (): Multer => {
+  const storage = multer.diskStorage({
+    destination: function (req, file, cb) {
+      cb(null, "uploads/");
+    },
+    filename: function (req, file, cb) {
+      cb(null, Date.now() + "-" + file.originalname);
+    },
+  });
+
+  return multer({ storage: storage });
 };

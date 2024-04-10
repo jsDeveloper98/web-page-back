@@ -44,7 +44,7 @@ class AuthC {
       });
 
       return res.status(201).json({
-        data: { token, userId: user.id },
+        data: { token, userId: user.id, role: user.role },
         message: "Registration is completed",
       });
     } catch (err) {
@@ -91,7 +91,7 @@ class AuthC {
 
       return res.json({
         message: "Successfully logged in",
-        data: { token, userId: user.id },
+        data: { token, userId: user.id, role: user.role },
       });
     } catch (err) {
       if (err instanceof Error) {
@@ -100,15 +100,17 @@ class AuthC {
     }
   }
 
-  checkAuth(req: Request, res: Response) {
+  async checkAuth(req: Request, res: Response) {
     try {
       const token = req.cookies.token;
       const userId = req.cookies.userId;
 
+      const user = await User.findOne({ _id: userId });
+
       if (!!token) {
         return res.json({
           message: "Authorized",
-          data: { token, userId },
+          data: { token, userId, role: user?.role },
         });
       }
 

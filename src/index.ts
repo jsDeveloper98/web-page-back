@@ -4,7 +4,7 @@ import { config } from "dotenv";
 import cookieParser from "cookie-parser";
 
 import { connectDB } from "./config";
-import { authRoute, postRoute } from "./routes";
+import { authRoute, productRoute } from "./routes";
 
 config();
 
@@ -22,6 +22,6 @@ app.use(express.json());
 app.use("/uploads", express.static("uploads"));
 
 app.use("/api", authRoute);
-app.use("/api", postRoute);
+app.use("/api", productRoute);
 
 connectDB(app);

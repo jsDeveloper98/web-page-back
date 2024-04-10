@@ -1,2 +1,2 @@
 export * from "./authRoute";
-export * from "./postRoute";
+export * from "./productRoute";
