@@ -1,10 +1,11 @@
 import { config } from "dotenv";
-import { sign } from "jsonwebtoken";
 import { compare, hash } from "bcrypt";
+import { sign, verify } from "jsonwebtoken";
 import { Request, Response } from "express";
 import { validationResult } from "express-validator";
 
 import { User, IUser } from "../models";
+import { getUserIdFromToken } from "../utils";
 
 config();
 
@@ -44,7 +45,7 @@ class AuthC {
       });
 
       return res.status(201).json({
-        data: { token, userId: user.id, role: user.role },
+        data: { token, role: user.role },
         message: "Registration is completed",
       });
     } catch (err) {
@@ -87,11 +88,10 @@ class AuthC {
 
       const hour = 3600000;
       res.cookie("token", token, { maxAge: hour, httpOnly: true });
-      res.cookie("userId", user.id, { maxAge: hour, httpOnly: true });
 
       return res.json({
         message: "Successfully logged in",
-        data: { token, userId: user.id, role: user.role },
+        data: { token, role: user.role },
       });
     } catch (err) {
       if (err instanceof Error) {
@@ -103,20 +103,19 @@ class AuthC {
   async checkAuth(req: Request, res: Response) {
     try {
       const token = req.cookies.token;
-      const userId = req.cookies.userId;
-
+      const userId = getUserIdFromToken(token);
       const user = await User.findOne({ _id: userId });
 
-      if (!!token) {
+      if (!userId || !user) {
         return res.json({
-          message: "Authorized",
-          data: { token, userId, role: user?.role },
+          message: "Unauthorized",
+          data: null,
         });
       }
 
       return res.json({
-        message: "Unauthorized",
-        data: null,
+        message: "Authorized",
+        data: { token, role: user.role },
       });
     } catch (err) {
       if (err instanceof Error) {
@@ -128,7 +127,6 @@ class AuthC {
   logout(req: Request, res: Response) {
     try {
       res.clearCookie("token");
-      res.clearCookie("userId");
 
       return res.json({
         message: "Successfully logged out",

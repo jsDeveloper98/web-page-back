@@ -1,14 +1,13 @@
 import { config } from "dotenv";
-import { JwtPayload, verify } from "jsonwebtoken";
 import { Request, Response, NextFunction } from "express";
+
+import { IRequest } from "../@types";
+import { getUserIdFromToken } from "../utils";
 
 config();
 
-const { JWT_SECRET } = process.env;
-
-// TODO: change the logic here to handle cookies
-export const checkAuth = (
-  req: Request & { user?: JwtPayload },
+export const addUserIdToRequest = (
+  req: IRequest,
   res: Response,
   next: NextFunction
 ) => {
@@ -17,22 +16,16 @@ export const checkAuth = (
   }
 
   try {
-    const token = req.headers.authorization?.split(" ")[1];
-
-    if (!token) {
-      return res.status(401).json({ message: "No authorization" });
+    const userId = getUserIdFromToken(req.cookies.token);
+    if (!userId) {
+      return res.status(401).json({ message: "Unauthorized", data: null });
     }
 
-    req.user = verify(token, JWT_SECRET as string) as JwtPayload;
-
-    if (req.user.exp && req.user.exp <= Date.now() / 1000) {
-      return res.status(401).json({ message: "Authorization token expired" });
-    }
-
+    req.user = { userId };
     next();
   } catch (err) {
     if (err instanceof Error) {
-      res.status(401).json({ message: err.message });
+      res.status(401).json({ message: err.message, data: null });
     }
   }
 };
