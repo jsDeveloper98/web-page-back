@@ -44,6 +44,9 @@ class AuthC {
         expiresIn: "1h",
       });
 
+      const hour = 3600000;
+      res.cookie("token", token, { maxAge: hour, httpOnly: true });
+
       return res.status(201).json({
         data: { token, role: user.role },
         message: "Registration is completed",
