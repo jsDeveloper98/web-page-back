@@ -54,12 +54,12 @@ class ProductC {
     }
   }
 
-  async delete(req: Request, res: Response) {
+  async delete(req: IRequest, res: Response) {
     try {
-      await Product.findOneAndDelete({ _id: req.params.id });
+      await Product.findOneAndDelete({ _id: req.params.productId });
 
       res.json({
-        data: { _id: req.params.id },
+        data: { _id: req.params.productId },
         message: "Deleted",
       });
     } catch (err) {

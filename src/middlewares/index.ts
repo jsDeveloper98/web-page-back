@@ -1,5 +1,5 @@
 import { config } from "dotenv";
-import { Request, Response, NextFunction } from "express";
+import { Response, NextFunction } from "express";
 
 import { IRequest } from "../@types";
 import { getUserIdFromToken } from "../utils";
@@ -18,7 +18,7 @@ export const addUserIdToRequest = (
   try {
     const userId = getUserIdFromToken(req.cookies.token);
     if (!userId) {
-      return res.status(401).json({ message: "Unauthorized", data: null });
+      throw new Error("Unauthorized");
     }
 
     req.user = { userId };

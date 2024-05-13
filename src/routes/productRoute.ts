@@ -16,6 +16,12 @@ router.post(
   ProductController.create
 );
 
+router.delete(
+  "/products/:productId",
+  addUserIdToRequest,
+  ProductController.delete
+);
+
 router.get("/my-products", addUserIdToRequest, ProductController.getMyProducts);
 
 export { router as productRoute };
