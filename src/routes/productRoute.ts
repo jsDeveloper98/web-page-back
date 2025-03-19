@@ -16,12 +16,18 @@ router.post(
   ProductController.create
 );
 
+router.get("/products", addUserIdToRequest, ProductController.get);
+
+router.get(
+  "/products/:productId",
+  addUserIdToRequest,
+  ProductController.getById
+);
+
 router.delete(
   "/products/:productId",
   addUserIdToRequest,
   ProductController.delete
 );
-
-router.get("/my-products", addUserIdToRequest, ProductController.getMyProducts);
 
 export { router as productRoute };
